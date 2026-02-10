@@ -158,16 +158,23 @@ elseif gameNumber == 5
 
 %% Coin flip, I am lazy
 elseif gameNumber == 6
+    ht = randi(2); 
 
-    ht = randi(2);
-    fprintf("Heads or Tails? (1 for heads 2 for tails)");
-    guess = input("");
+    fprintf("Heads or Tails?\n");
+    fprintf("Enter 1 for Heads and 2 for Tails.\n\n")
+    disp(ht)
+
+    guess = input("Which will it be: ");
+
     if guess == ht
-        msg = sprintf("Correct!\n");
-    else
-        msg = sprintf("WRONG!\n");
-        win = false;
+        win = true;
+        msg = sprintf("Fate smiles upon thee!\n")
     end
+    if guess ~= ht
+        win = false;
+        msg = sprintf("You shall not pass!\n");
+    end
+
 else
     win = false;
     msg = 'Invalid entry. You lose.';

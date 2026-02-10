@@ -228,6 +228,9 @@ if possibleSus >= length(possibleColors)
     possibleSus = length(possibleColors);
 end
 
+[data, sampleRate] = audioread("amongustheme.mp3");
+
+
 % making players!
 for k = 1:length(possibleColors)
     players(k) = Crewmate(possibleColors(k));
@@ -257,53 +260,76 @@ end
 % also returns its index, we use it to go through
 % the logic.
 
+lastGuessImposter = false;
+
 while (gameState) & (numGuess > 0)
     colors = [players.color];
-
+    sound(data, sampleRate, 24);
     % Should ask the user for a guess AND verify it.
     [valid, idx] = guess(colors);
-
 
     if (valid) && (players(idx).sus)
         % the user has guessed the correct impostor.
 
+        uG = char(colors(idx));
+
         % remove the correct impostor from everything.
+
         players(idx) = [];
         colors(idx) = [];
-        
+
+        fprintf("%c was the imposter!\n", uG(1));
         % Sabotage event
-        game = MiniGames(randi(6));
+        game = MiniGames((6));
+        if game
+            % Make the user re guess after sabotage.
+            [valid, idx] = guess(colors);
 
-        % Make the user re guess after sabotage.
-        [valid, idx] = guess(colors);
-        valid =  game & valid;
+            % scary mode!
+            scaryMode = true;
 
-        if (valid) && (players(idx).sus)
-            gameState = false;
-            numGuess = 0;
-            disp("congrats! You win!")
+            if (valid) && (players(idx).sus)
+                gameState = false;
+                numGuess = 0;
+                disp("You win!")
+                clear sound;
+            else
+                gameState = false;
+                numGuess = 0;
+                disp("You lose!")
+                clear sound;
+            end
+
         else
             gameState = false;
+            scaryMode = true;
             numGuess = 0;
-            disp("You lose!")
+            clear sound
         end
-
-
+        
     elseif valid && ~(players(idx).sus)
         % the user has guessed a valid crewmate but not the correct
         % imposter.
         players(idx) = [];
         numGuess = numGuess - 1;
-
+        lastGuessImposter = true;
 
     elseif ~valid
         % the user has NOT made a valid guess.
         numGuess = numGuess - 1;
-
+        lastGuessImposter = false;
 
     else
         error("something is horribly wrong.")
     end
 
+    if numGuess == 0 && lastGuessImposter && ~scaryMode
+        clear sound;
+        uG = char(colors(idx));
+        fprintf("%c was not the imposter you lose!", uG(1))
+    elseif numGuess == 0 && ~lastGuessImposter && ~scaryMode
+        clear sound;
+        fprintf("You lose!")
+    end
 
 end
