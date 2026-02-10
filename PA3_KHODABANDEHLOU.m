@@ -190,8 +190,6 @@ if isLost
     disp("You lose!")
 end
 
-
-
 %% simplified version
 
 % Check for input
@@ -201,3 +199,4 @@ end
 %   - if it is an element, check if we are an imposter.
 %       - if we are an imposter 
 %
+
