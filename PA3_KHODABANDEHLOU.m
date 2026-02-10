@@ -109,13 +109,13 @@ while gameState
 
                 break
             end
-    
-            if valid 
+
+            if valid
                 isLost = false;
                 guessing = false;
                 gameState = false;
                 fprintf("\n")
-                break 
+                break
             end
 
         end
@@ -173,7 +173,7 @@ while gameState
             break
         end
     end
-    
+
     if numGuess == 0
         break
     end
@@ -186,7 +186,7 @@ if ~isLost
     disp("congrats! You won!")
 end
 
-if isLost 
+if isLost
     disp("You lose!")
 end
 
@@ -197,7 +197,7 @@ clear, clc, close all
 %       - if yes return the element and its index
 %       - if no return false and 0
 %   - if it is an element, check if we are an imposter.
-%       - if we are an imposter 
+%       - if we are an imposter
 %
 
 
@@ -259,35 +259,51 @@ end
 
 while (gameState) & (numGuess > 0)
     colors = [players.color];
+
     % Should ask the user for a guess AND verify it.
     [valid, idx] = guess(colors);
 
 
-    if (valid) & (players(idx).sus)
-        % the user has guessed the correct imposter.
-        disp("valid guess & correct guess")
-        
+    if (valid) && (players(idx).sus)
+        % the user has guessed the correct impostor.
 
-    elseif valid & ~(players(idx).sus)
+        % remove the correct impostor from everything.
+        players(idx) = [];
+        colors(idx) = [];
+        
+        % Sabotage event
+        game = MiniGames(randi(6));
+
+        % Make the user re guess after sabotage.
+        [valid, idx] = guess(colors);
+        valid =  game & valid;
+
+        if (valid) && (players(idx).sus)
+            gameState = false;
+            numGuess = 0;
+            disp("congrats! You win!")
+        else
+            gameState = false;
+            numGuess = 0;
+            disp("You lose!")
+        end
+
+
+    elseif valid && ~(players(idx).sus)
         % the user has guessed a valid crewmate but not the correct
         % imposter.
-        disp("valid guess")
+        players(idx) = [];
         numGuess = numGuess - 1;
 
 
     elseif ~valid
         % the user has NOT made a valid guess.
-        disp("invalid guess")
         numGuess = numGuess - 1;
 
-        
+
     else
         error("something is horribly wrong.")
     end
-
-
-
-
 
 
 end

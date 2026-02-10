@@ -228,7 +228,6 @@ if possibleSus >= length(possibleColors)
     possibleSus = length(possibleColors);
 end
 
-
 % making players!
 for k = 1:length(possibleColors)
     players(k) = Crewmate(possibleColors(k));
@@ -254,39 +253,38 @@ for k = 1:length(players)
     validGuess = [validGuess, players(k).color];
 end
 
-
-
-g = input("Guess an imposter: ", "s");
-
 % Function returns true if the guess is valid
 % also returns its index, we use it to go through
 % the logic.
 
 while (gameState) & (numGuess > 0)
     colors = [players.color];
-    
-    g = input("Guess the imposter: ", "s");
 
-    % This function returns true if the guess is valid, and also the index
-    % of the guess.
-    [valid, idx] = check_guess(g, colors);
-    
+    % Should ask the user for a guess AND verify it.
+    [valid, idx] = guess(colors);
+
 
     if (valid) & (players(idx).sus)
         % the user has guessed the correct imposter.
-        
+        disp("valid guess & correct guess")
+
     elseif valid & ~(players(idx).sus)
         % the user has guessed a valid crewmate but not the correct
         % imposter.
+        disp("valid guess")
+
+        numGuess = numGuess - 1;
+
 
     elseif ~valid
         % the user has NOT made a valid guess.
-    else 
-        error("something is HORRIFICLLY wrong.")
+        disp("invalid guess")
+        numGuess = numGuess - 1;
+
+
+    else
+        error("something is horribly wrong.")
     end
-
-
-
 
 
 

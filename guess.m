@@ -10,7 +10,10 @@ function [valid, idx] = guess(playerList)
 % output:
 %       valid -- If the users guess is valid.
 %       idx   -- The index of the users guess.
-    
+
+fprintf("valid guesses are: \n")
+disp(playerList)
+
 g = input("Guess the imposter: ", "s");
 % This function returns true if the guess is valid, and also the index
 % of the guess.
