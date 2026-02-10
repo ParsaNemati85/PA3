@@ -1,0 +1,21 @@
+classdef Crewmate
+
+    properties
+        sus = false;
+        color = 'red'
+
+    end
+
+    methods
+
+        function obj = Crewmate(varargin)
+            if nargin == 1
+               
+            end
+            obj.color = color;
+            obj.sus = sus;
+        end
+    end
+
+
+end
